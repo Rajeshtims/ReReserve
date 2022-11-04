@@ -1,8 +1,9 @@
 import React, {useRef, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Button, Alert} from 'react-native';
 
 export default function Sell() {
   const [restaurant, setRestaurant] = useState();
+  const [headCount, setHeadCount] = useState();
   const [price, setPrice] = useState();
   const [location, setLocation] = useState();
   const [time, setTime] = useState();
@@ -22,6 +23,9 @@ export default function Sell() {
   const onChangeVenmo = text => {
     setVenmoID(text);
   };
+  const onChangeHeadCount = text => {
+    setHeadCount(text);
+  };
   const handleSend = async () => {
     await fetch('https://team13.egrep6021ad.repl.co/create/', {
       method: 'POST',
@@ -31,10 +35,21 @@ export default function Sell() {
       },
       body: JSON.stringify({
         restaurant: restaurant,
-        time_of_reservation: time,
+        time: time,
+        headcount: headCount,
+        adress: location,
+        price: price,
+        venmo_id: venmoID,
       }),
     });
     console.log('Complete POST');
+    setRestaurant(null);
+    setTime(null);
+    setHeadCount(null);
+    setLocation(null);
+    setPrice(null);
+    setVenmoID(null);
+    Alert.alert("It's posted for sale!");
   };
 
   useEffect(() => {
@@ -45,26 +60,35 @@ export default function Sell() {
       <TextInput
         style={styles.input}
         value={restaurant}
-        placeholder="restaurant"
+        placeholder="Restaurant? "
         onChangeText={text => onChangeRestaurant(text)}
       />
       <TextInput
         style={styles.input}
+        value={time}
+        placeholder="What time is the reservation?"
+        keyboardType="numeric"
+        onChangeText={text => onChangeTime(text)}
+      />
+      <TextInput
+        style={styles.input}
+        value={headCount}
+        placeholder="How many seats?"
+        keyboardType="numeric"
+        onChangeText={text => onChangeHeadCount(text)}
+      />
+      <TextInput
+        style={styles.input}
         value={location}
-        placeholder="location"
+        placeholder="What is the adress? "
         onChangeText={text => onChangeLocation(text)}
       />
       <TextInput
         style={styles.input}
         value={price}
-        placeholder="price"
+        placeholder="How much are you asking?"
+        keyboardType="numeric"
         onChangeText={text => onChangePrice(text)}
-      />
-      <TextInput
-        style={styles.input}
-        value={time}
-        placeholder="time"
-        onChangeText={text => onChangeTime(text)}
       />
       <TextInput
         style={styles.input}
@@ -72,7 +96,6 @@ export default function Sell() {
         placeholder="venmo ID"
         onChangeText={text => onChangeVenmo(text)}
       />
-
       <Button title="SELL" onPress={() => handleSend()} />
     </View>
   );
