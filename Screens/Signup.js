@@ -1,7 +1,8 @@
-import React, {useRef, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Button, TextInput} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TextInput, Dimensions} from 'react-native';
 import {useNavigation} from '@react-navigation/native'; // Key to navigations in some components
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Button} from 'react-native-paper';
 
 export default function Signup() {
   const navigation = useNavigation(); // Key to navigations in some components
@@ -10,7 +11,7 @@ export default function Signup() {
   const [password, setPassword] = useState();
   const [venmoID, setVenmoID] = useState();
   const [venmoPassword, setVenmoPassword] = useState();
-
+  // Similiar to listeners:
   const onChangeEmail = text => {
     setEmail(text);
   };
@@ -23,7 +24,7 @@ export default function Signup() {
   const onChangeVenmoPassword = text => {
     setVenmoPassword(text);
   };
-
+  // Save the input locally:
   const saveLocalData = async () => {
     try {
       AsyncStorage.setItem(`email`, email);
@@ -33,7 +34,9 @@ export default function Signup() {
     } catch (error) {
       console.log(error);
     }
+    navigation.navigate('Home');
   };
+  // Fetch local data:
   const getLocalData = async () => {
     try {
       const email = await AsyncStorage.getItem(`email`);
@@ -43,61 +46,73 @@ export default function Signup() {
     }
     setIsLoading(false);
   };
+
   useEffect(() => {
+    // Check if user already registed, if so... forward to home screen:
     if (isLoading) getLocalData();
   }, []);
   return (
     <View style={styles.main}>
-      <TextInput
-        style={styles.input}
-        value={email}
-        placeholder="Email: "
-        onChangeText={text => onChangeEmail(text)}
-      />
-      <TextInput
-        style={styles.input}
-        value={password}
-        placeholder="Password: "
-        onChangeText={text => onChangePassword(text)}
-      />
-      <TextInput
-        style={styles.input}
-        value={venmoID}
-        placeholder="Venmo ID: "
-        onChangeText={text => onChangeVenmoID(text)}
-      />
-      <TextInput
-        style={styles.input}
-        value={venmoPassword}
-        placeholder="Venmo Password: "
-        onChangeText={text => onChangeVenmoPassword(text)}
-      />
-
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={email}
+          placeholder="Email: "
+          onChangeText={text => onChangeEmail(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={password}
+          placeholder="Password: "
+          onChangeText={text => onChangePassword(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={venmoID}
+          placeholder="Venmo ID: "
+          onChangeText={text => onChangeVenmoID(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={venmoPassword}
+          placeholder="Venmo Password: "
+          onChangeText={text => onChangeVenmoPassword(text)}
+        />
+      </View>
       <Button
-        title="Signup!"
+        style={styles.registerButton}
         onPress={() => {
           saveLocalData();
-          console.log(email, password, venmoID, venmoPassword);
-        }}
-      />
+        }}>
+        <Text style={{color: 'white'}}>Register</Text>
+      </Button>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   main: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: 'yellow',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  inputContainer: {
+    marginTop: -155,
+    padding: 10,
+  },
   input: {
     height: 40,
-    width: '50%',
+    width: 200,
     margin: 12,
     borderWidth: 1,
-    padding: 10,
+    padding: 5,
+    borderRadius: 5,
+  },
+  registerButton: {
+    width: 150,
+    backgroundColor: 'blue',
+    fontColor: 'black',
   },
 });
