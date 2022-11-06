@@ -1,3 +1,17 @@
+# ReReserve
+
+"A place to buy and sell reservations to popular restaurants near you"
+
+## Development:
+
+- Once you clone the repository please create a new branch to work in, not the "master"
+
+- Please don't directly merge your changes into the master branch.
+  Submit a PR, and allow someone else in the group to review the code and merge.
+
+- Make sure to keep your branch up to date with changes in the master, as changes could affect the way your works.
+  (https://gist.github.com/whoisryosuke/36b3b41e738394170b9a7c230665e6b9)
+
 ## Directions to run on local machine:
 
 - Open the whole "ReReserve" folder in VS code.
