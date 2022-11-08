@@ -3,29 +3,15 @@ import MapView from 'react-native-maps';
 import Marker from 'react-native-maps';
 import {View, Text, StyleSheet, Platform} from 'react-native';
 // Re-usable component to display the map
-export default function Map() {
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-
+export default function Map(props) {
+  //const [data, setData] = useState();
+  //const [isLoading, setIsLoading] = useState(true);
+  //const setAllRestaurants() = useState(props.setAllRestaurants);
   // Query the "restaurants" database from backend server:
-  const fetchData = async () => {
-    console.log('Fetching...');
-    try {
-      const response = await fetch('https://team13.egrep6021ad.repl.co/fetch/');
-      const json = await response.json();
-      // Store the array of restaurant objects to state variable:
-      setData(json);
-      console.log(json);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
   useEffect(() => {
     // When the map initially loads, fetch data:
-    if (isLoading) {
-      fetchData();
-      setIsLoading(false);
-    }
+    console.log('loaded map:');
   }, []);
   return (
     <View style={styles.container}>

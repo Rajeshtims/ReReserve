@@ -5,9 +5,28 @@ import {Button} from 'react-native-paper';
 import Map from './Map';
 export default function HomeScreen() {
   const navigation = useNavigation(); // Key to navigations in some components
+  const [data, setData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchData = async () => {
+    console.log('Fetching...');
+    try {
+      const response = await fetch('https://team13.egrep6021ad.repl.co/fetch/');
+      const json = await response.json();
+      // Store the array of restaurant objects to state variable:
+      setData(json);
+      console.log(json);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    console.log('render');
+    if (isLoading) {
+      fetchData();
+      setIsLoading(false);
+    }
+    console.log('Home Screen:');
   }, []);
   return (
     <View style={styles.main}>
@@ -22,7 +41,11 @@ export default function HomeScreen() {
         </Button>
         <Button
           style={styles.sellButton}
-          onPress={() => navigation.navigate('Reservations')}>
+          onPress={() =>
+            navigation.navigate('Reservations', {
+              allRestaurants: data,
+            })
+          }>
           <Text style={{color: 'white'}}>Buy Reservation</Text>
         </Button>
       </View>
