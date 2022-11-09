@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TextInput, Button, Alert} from 'react-native';
-
+import {View, Text, StyleSheet, TextInput, Alert} from 'react-native';
+import {Button} from 'react-native-paper';
 export default function Sell() {
   const [restaurant, setRestaurant] = useState();
   const [headCount, setHeadCount] = useState();
@@ -57,46 +57,58 @@ export default function Sell() {
   });
   return (
     <View style={styles.main}>
-      <TextInput
-        style={styles.input}
-        value={restaurant}
-        placeholder="Restaurant? "
-        onChangeText={text => onChangeRestaurant(text)}
-      />
-      <TextInput
-        style={styles.input}
-        value={time}
-        placeholder="What time is the reservation?"
-        keyboardType="numeric"
-        onChangeText={text => onChangeTime(text)}
-      />
-      <TextInput
-        style={styles.input}
-        value={headCount}
-        placeholder="How many seats?"
-        keyboardType="numeric"
-        onChangeText={text => onChangeHeadCount(text)}
-      />
-      <TextInput
-        style={styles.input}
-        value={location}
-        placeholder="What is the adress? "
-        onChangeText={text => onChangeLocation(text)}
-      />
-      <TextInput
-        style={styles.input}
-        value={price}
-        placeholder="How much are you asking?"
-        keyboardType="numeric"
-        onChangeText={text => onChangePrice(text)}
-      />
-      <TextInput
-        style={styles.input}
-        value={venmoID}
-        placeholder="venmo ID"
-        onChangeText={text => onChangeVenmo(text)}
-      />
-      <Button title="SELL" onPress={() => handleSend()} />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={restaurant}
+          placeholder="Restaurant? "
+          placeholderTextColor={'#455A64'}
+          onChangeText={text => onChangeRestaurant(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={time}
+          placeholder="Time of reservation?"
+          placeholderTextColor={'#455A64'}
+          keyboardType="numeric"
+          onChangeText={text => onChangeTime(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={headCount}
+          placeholder="How many seats?"
+          placeholderTextColor={'#455A64'}
+          keyboardType="numeric"
+          onChangeText={text => onChangeHeadCount(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={location}
+          placeholder="What is the adress? "
+          placeholderTextColor={'#455A64'}
+          onChangeText={text => onChangeLocation(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={price}
+          placeholder="How much are you asking? "
+          placeholderTextColor={'#455A64'}
+          keyboardType="numeric"
+          onChangeText={text => onChangePrice(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={venmoID}
+          placeholder="venmo ID "
+          placeholderTextColor={'#455A64'}
+          onChangeText={text => onChangeVenmo(text)}
+        />
+      </View>
+      <Button style={styles.sellButton} onPress={() => handleSend()}>
+        <Text style={{color: 'black', fontWeight: '400', fontSize: 20}}>
+          {'Sell Now!'}
+        </Text>
+      </Button>
     </View>
   );
 }
@@ -107,13 +119,36 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#7BDCB5',
+  },
+  inputContainer: {
+    marginTop: 35,
+    width: '80%',
+    height: '60%',
   },
   input: {
     height: 40,
-    width: '50%',
-    margin: 12,
+    width: '100%',
+    marginTop: '10%',
     borderWidth: 1,
     padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  sellButton: {
+    marginTop: '15%',
+    backgroundColor: '#FF8A65',
+    width: Platform.OS == 'ios' ? 300 : '80%',
+    height: Platform.OS == 'ios' ? 50 : null,
+    display: 'flex',
+    justifyContent: 'center',
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
 });

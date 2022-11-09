@@ -1,32 +1,22 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/native'; // Key to navigations in some components
 import {Button} from 'react-native-paper';
 import Map from './Map';
 
-export default function Buy() {
+export default function Buy({route}) {
   const navigation = useNavigation(); // Key to navigations in some components
 
   useEffect(() => {
-    console.log('render');
+    console.log('Buy Screen: ');
+    console.log(route.params.allRestaurants);
   }, []);
   return (
     <View style={styles.main}>
       <View style={styles.mapView}>
         <Map />
       </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          style={styles.sellButton}
-          onPress={() => navigation.navigate('Sell')}>
-          <Text style={{color: 'white'}}>Sell Reservation</Text>
-        </Button>
-        <Button
-          style={styles.sellButton}
-          onPress={() => navigation.navigate('Buy')}>
-          <Text style={{color: 'white'}}>Buy</Text>
-        </Button>
-      </View>
+      <View style={styles.buttonContainer}></View>
     </View>
   );
 }
