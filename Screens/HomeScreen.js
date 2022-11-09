@@ -1,5 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Platform} from 'react-native';
+import {View, Text, StyleSheet, Platform, SafeAreaView} from 'react-native';
 import {useNavigation} from '@react-navigation/native'; // Key to navigations in some components
 import {Button} from 'react-native-paper';
 import Map from './Map';
@@ -29,7 +29,7 @@ export default function HomeScreen() {
     console.log('Home Screen:');
   }, []);
   return (
-    <View style={styles.main}>
+    <SafeAreaView style={styles.main}>
       <View style={styles.mapView}>
         <Map />
       </View>
@@ -37,7 +37,9 @@ export default function HomeScreen() {
         <Button
           style={styles.sellButton}
           onPress={() => navigation.navigate('Sell')}>
-          <Text style={{color: 'white'}}>Sell Reservation</Text>
+          <Text style={{color: 'black', fontWeight: '400', fontSize: 20}}>
+            Sell Reservation
+          </Text>
         </Button>
         <Button
           style={styles.sellButton}
@@ -46,36 +48,47 @@ export default function HomeScreen() {
               allRestaurants: data,
             })
           }>
-          <Text style={{color: 'white'}}>Buy Reservation</Text>
+          <Text style={{color: 'black', fontWeight: '400', fontSize: 20}}>
+            Buy Reservation
+          </Text>
         </Button>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   main: {
-    height: '100%',
-    width: '100%',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#7BDCB5',
+    marginTop: '10%',
+    height: '90%',
   },
   buttonContainer: {
     marginTop: '10%',
   },
   sellButton: {
     alignSelf: 'center',
-    width: Platform.OS == 'ios' ? '110%' : '80%',
-    backgroundColor: 'blue',
-    fontColor: 'black',
-    marginTop: '5%',
+    width: Platform.OS == 'ios' ? 300 : '80%',
+    height: Platform.OS == 'ios' ? 50 : null,
+    backgroundColor: '#FF8A65',
+    marginTop: '10%',
+    display: 'flex',
+    justifyContent: 'center',
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   mapView: {
-    marginTop: -90,
-    marginBottom: 10,
+    marginTop: '-2%',
     height: 400,
     width: 400,
     backgroundColor: 'black',
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
 });
