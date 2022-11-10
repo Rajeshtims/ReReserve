@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, Platform, ScrollView} from 'react-native';
 import {useState, useEffect} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native'; // Key to navigations in some components
-// import Buy from "./Buy"
 import {NavigationContainer} from '@react-navigation/native';
 
 export default function Reservations({route}) {
@@ -13,36 +12,28 @@ export default function Reservations({route}) {
     console.log(route.params.allRestaurants);
   });
   return (
-    <ScrollView style={{padding: 10, flex: 1}}>
-      <Text style={styles.label}>Available Navigations</Text>
-
-      <View style={styles.column}>
-        {route.params.allRestaurants.map((el, index) => (
-          <TouchableOpacity
-            // TODO
-            // instead of props.name, we shall use reservation ID as key
-            key={index}
-            onPress={() =>
-              navigation.navigate('Buy', {
-                allRestaurants: route.params.allRestaurants,
-              })
-            }
-            style={styles.button}>
-            <Text>{el.restaurant}</Text>
-            <Text>{el.adress}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
-
-    //    // <Stack.Screen name="Profile" component={ProfileScreen} />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-    /*
-        <Text style={styles.buttonLabel}>{index.name}</Text>
-            <Text style={[styles.buttonLabel, styles.subText]}>
-              {index.address}
-            </Text>*/
+    <View style={{marginTop: 15}}>
+      <Text style={styles.label}>Available Reservations</Text>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.column}>
+          {route.params.allRestaurants.map((el, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() =>
+                navigation.navigate('Buy', {
+                  selectedRestaurant: el,
+                  coordinate: route.params.markers[index],
+                  restaurant: route.params.allRestaurants[index],
+                })
+              }
+              style={styles.button}>
+              <Text>{el.restaurant}</Text>
+              <Text>{el.adress}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -52,6 +43,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     backgroundColor: 'aliceblue',
   },
+  scrollView: {
+    height: '100%',
+  },
   column: {
     flexDirection: 'column',
     flexWrap: 'wrap',
@@ -60,13 +54,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 12,
     borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'black',
     backgroundColor: 'lightgray',
     alignSelf: 'center',
     marginHorizontal: '2%',
     marginTop: '2%',
     marginBottom: 10,
     minWidth: '90%',
-    textAlign: 'center',
+    // Wont work because <Text> is child element
+    //textAlign: 'center',
+    // Instead:
+    display: 'flex',
+    alignItems: 'center',
   },
   selected: {
     backgroundColor: 'coral',
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: 'black',
+    fontStyle: 'italic',
   },
   subText: {
     fontSize: 16,

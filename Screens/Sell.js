@@ -1,13 +1,20 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TextInput, Alert} from 'react-native';
 import {Button} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
+// https://github.com/marlove/react-native-geocoding#readme
+import Geocoder from 'react-native-geocoding';
+
 export default function Sell() {
+  const navigation = useNavigation();
   const [restaurant, setRestaurant] = useState();
   const [headCount, setHeadCount] = useState();
   const [price, setPrice] = useState();
   const [location, setLocation] = useState();
   const [time, setTime] = useState();
   const [venmoID, setVenmoID] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+
   const onChangeRestaurant = text => {
     setRestaurant(text);
   };
@@ -26,22 +33,35 @@ export default function Sell() {
   const onChangeHeadCount = text => {
     setHeadCount(text);
   };
+
   const handleSend = async () => {
-    await fetch('https://team13.egrep6021ad.repl.co/create/', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        restaurant: restaurant,
-        time: time,
-        headcount: headCount,
-        adress: location,
-        price: price,
-        venmo_id: venmoID,
-      }),
-    });
+    // Look up the coordinates of adress and send to DB with all other info:
+    Geocoder.from(location)
+      .then(json => {
+        let temp = json.results[0].geometry.location;
+        let curr_location = {
+          latitude: temp.lat,
+          longitude: temp.lng,
+        };
+        fetch('https://team13.egrep6021ad.repl.co/create/', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            restaurant: restaurant,
+            time: time,
+            headcount: headCount,
+            adress: location,
+            price: price,
+            venmo_id: venmoID,
+            coordinates: curr_location,
+          }),
+        });
+      })
+      .catch(error => console.warn(error));
+
     console.log('Complete POST');
     setRestaurant(null);
     setTime(null);
@@ -50,11 +70,16 @@ export default function Sell() {
     setPrice(null);
     setVenmoID(null);
     Alert.alert("It's posted for sale!");
+    navigation.navigate('Home');
   };
 
   useEffect(() => {
-    console.log(restaurant);
-  });
+    if (isLoading) {
+      // Restricted API key:
+      Geocoder.init('AIzaSyBIsqjB7Rp5nTpVOi9RUZSVoCvtZYr1ZDk');
+      setIsLoading(false);
+    }
+  }, [restaurant, location]);
   return (
     <View style={styles.main}>
       <View style={styles.inputContainer}>

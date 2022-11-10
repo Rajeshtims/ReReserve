@@ -1,30 +1,40 @@
 import React, {useEffect, useState} from 'react';
 import MapView from 'react-native-maps';
-import Marker from 'react-native-maps';
+import {Marker} from 'react-native-maps';
 import {View, Text, StyleSheet, Platform} from 'react-native';
 // Re-usable component to display the map
 export default function Map(props) {
-  //const [data, setData] = useState();
-  //const [isLoading, setIsLoading] = useState(true);
-  //const setAllRestaurants() = useState(props.setAllRestaurants);
-  // Query the "restaurants" database from backend server:
-
   useEffect(() => {
     // When the map initially loads, fetch data:
-    console.log('loaded map:');
+    console.log('Map:');
+    console.log('Restaurants to mark:');
+    console.log(props.restaurants);
+    console.log('Marker locations:');
+    console.log(props.markers);
   }, []);
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        //liteMode={true}
+        showsUserLocation={true}
         initialRegion={{
-          latitude: 33.75272,
-          longitude: -84.38649,
+          latitude: props.currentLocation.coords.latitude,
+          longitude: props.currentLocation.coords.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
-        }}
-      />
+        }}>
+        {props.markers.map((el, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: el.latitude,
+              longitude: el.longitude,
+            }}
+            title={props.restaurants[index].restaurant}
+            description={props.restaurants[index].adress}
+          />
+        ))}
+      </MapView>
     </View>
   );
 }
