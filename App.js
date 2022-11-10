@@ -7,6 +7,7 @@ import Sell from './Screens/Sell';
 import Signup from './Screens/Signup';
 import Reservations from './Screens/Reservations';
 import Buy from './Screens/Buy';
+import Purchase from './Screens/PurchaseOverview';
 // A new renderer for Google Maps on Android will become the default through a progressive rollout starting in June 2022 at the earliest.
 // https://developers.google.com/maps/documentation/android-sdk/renderer
 //import {enableLatestRenderer} from 'react-native-maps';
