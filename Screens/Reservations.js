@@ -7,30 +7,68 @@ import {NavigationContainer} from '@react-navigation/native';
 
 export default function Reservations({route}) {
   const navigation = useNavigation();
+  const [filteredRestaurants, setFilteredRestaurants] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const filter_restaurants = () => {
+    const all_restaurants = route.params.allRestaurants;
+    let map = {};
+    for (let i = 0; i < all_restaurants.length; i++) {
+      let curr = all_restaurants[i];
+      if (!(curr.restaurant in map)) {
+        // Set the key to restaurant name
+        map[curr.restaurant] = {
+          // Value is an object {reservationTimes = [], address: string}
+          reservationTimes: [curr.reservation],
+          address: curr.adress,
+          coordinates: JSON.parse(curr.coordinates),
+        };
+      } else {
+        let arr = map[curr.restaurant].reservationTimes;
+        arr = [...arr, curr.reservation];
+        map[curr.restaurant].reservationTimes = arr;
+      }
+    }
+    setFilteredRestaurants(map);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
+    if (isLoading) {
+      filter_restaurants();
+    }
+
     console.log('Rservations Screen:');
-    console.log(route.params.allRestaurants);
-  });
+    if (filteredRestaurants !== null) {
+      console.log(filteredRestaurants);
+    }
+  }, [filteredRestaurants, isLoading]);
   return (
     <View style={{marginTop: 15}}>
       <Text style={styles.label}>Available Reservations</Text>
       <ScrollView style={styles.scrollView}>
-        <View style={styles.column}>
-          {route.params.allRestaurants.map((el, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() =>
-                navigation.navigate('Buy', {
-                  selectedRestaurant: el,
-                  coordinate: route.params.markers[index],
-                  restaurant: route.params.allRestaurants[index],
-                })
-              }
-              style={styles.button}>
-              <Text>{el.restaurant}</Text>
-              <Text>{el.adress}</Text>
-            </TouchableOpacity>
-          ))}
+        <View style={styles.column} key={filteredRestaurants}>
+          {isLoading
+            ? null
+            : Object.entries(filteredRestaurants).map(([key, v]) => {
+                return (
+                  <TouchableOpacity
+                    key={key}
+                    style={styles.button}
+                    onPress={() =>
+                      navigation.navigate('Buy', {
+                        selectedRestaurant: key,
+                        coordinate: filteredRestaurants[key].coordinates,
+                        restaurant: key,
+                        reservationTimes:
+                          filteredRestaurants[key].reservationTimes,
+                      })
+                    }>
+                    <Text>{key}</Text>
+                    <Text>{filteredRestaurants[key].address}</Text>
+                  </TouchableOpacity>
+                );
+              })}
         </View>
       </ScrollView>
     </View>
