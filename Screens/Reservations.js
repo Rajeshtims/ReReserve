@@ -25,6 +25,7 @@ export default function Reservations({route}) {
           headCounts: [curr.headcount],
           prices: [curr.price],
           ids: [curr.id],
+          dates: [curr.date],
         };
       } else {
         let times = map[curr.restaurant].reservationTimes;
@@ -35,10 +36,14 @@ export default function Reservations({route}) {
         ids = [...ids, curr.id];
         let prices = map[curr.restaurant].prices;
         prices = [...prices, curr.price];
+        let dates = map[curr.restaurant].dates;
+        dates = [...dates, curr.date];
+
         map[curr.restaurant].reservationTimes = times;
         map[curr.restaurant].headCounts = headcounts;
         map[curr.restaurant].ids = ids;
         map[curr.restaurant].prices = prices;
+        map[curr.restaurant].dates = dates;
       }
     }
     setFilteredRestaurants(map);
@@ -77,6 +82,7 @@ export default function Reservations({route}) {
                         headCounts: filteredRestaurants[key].headCounts,
                         prices: filteredRestaurants[key].prices,
                         ids: filteredRestaurants[key].ids,
+                        dates: filteredRestaurants[key].dates,
                       })
                     }>
                     <Text>{key}</Text>

@@ -12,6 +12,7 @@ export default function Sell() {
   const [price, setPrice] = useState();
   const [location, setLocation] = useState();
   const [time, setTime] = useState();
+  const [date, setDate] = useState();
   const [venmoID, setVenmoID] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,6 +27,9 @@ export default function Sell() {
   };
   const onChangeTime = text => {
     setTime(text);
+  };
+  const onChangeDate = text => {
+    setDate(text);
   };
   const onChangeVenmo = text => {
     setVenmoID(text);
@@ -57,6 +61,7 @@ export default function Sell() {
             price: price,
             venmo_id: venmoID,
             coordinates: curr_location,
+            date: date,
           }),
         });
       })
@@ -69,6 +74,7 @@ export default function Sell() {
     setLocation(null);
     setPrice(null);
     setVenmoID(null);
+    setDate(null);
     Alert.alert("It's posted for sale!");
     navigation.navigate('Home');
   };
@@ -89,6 +95,14 @@ export default function Sell() {
           placeholder="Restaurant? "
           placeholderTextColor={'#455A64'}
           onChangeText={text => onChangeRestaurant(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={time}
+          placeholder="Date of reservation?"
+          placeholderTextColor={'#455A64'}
+          keyboardType="numeric"
+          onChangeText={text => onChangeDate(text)}
         />
         <TextInput
           style={styles.input}
@@ -165,7 +179,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   sellButton: {
-    marginTop: '15%',
+    marginTop: '25%',
     backgroundColor: '#FF8A65',
     width: Platform.OS == 'ios' ? 300 : '80%',
     height: Platform.OS == 'ios' ? 50 : null,

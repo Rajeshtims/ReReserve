@@ -48,6 +48,7 @@ export default function Buy({route}) {
               price: route.params.prices[index],
               id: route.params.ids[index],
               time: el,
+              date: route.params.dates[index],
             })
           }>
           <Text>{el}</Text>
