@@ -17,7 +17,7 @@ export default function Purchase({route}) {
       <Text style={styles.fontSize}>{route.params.restaurantName}</Text>
       <Text style={styles.fontSize}>{route.params.tableSize}</Text>
       <Text style={styles.fontSize}>{route.params.price}</Text>
-      <Text style={styles.fontSize}>date place holder</Text>
+      <Text style={styles.fontSize}>{route.params.date}</Text>
       <Button
         style={styles.sellButton}
         onPress={() => navigation.navigate('Confirmation')}>
