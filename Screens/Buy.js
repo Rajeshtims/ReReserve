@@ -32,6 +32,12 @@ export default function Buy({route}) {
           restaurants={[route.params.restaurant]}
         />
       </View>
+      <Button
+        onPress={() => {
+          navigation.navigate('PurchaseOverview');
+        }}>
+        <Text>Purchase</Text>
+      </Button>
       <View style={styles.buttonContainer}></View>
     </View>
   );
