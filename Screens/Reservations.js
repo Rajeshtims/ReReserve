@@ -22,11 +22,23 @@ export default function Reservations({route}) {
           reservationTimes: [curr.reservation],
           address: curr.adress,
           coordinates: JSON.parse(curr.coordinates),
+          headCounts: [curr.headcount],
+          prices: [curr.price],
+          ids: [curr.id],
         };
       } else {
-        let arr = map[curr.restaurant].reservationTimes;
-        arr = [...arr, curr.reservation];
-        map[curr.restaurant].reservationTimes = arr;
+        let times = map[curr.restaurant].reservationTimes;
+        times = [...times, curr.reservation];
+        let headcounts = map[curr.restaurant].headCounts;
+        headcounts = [...headcounts, curr.headcount];
+        let ids = map[curr.restaurant].ids;
+        ids = [...ids, curr.id];
+        let prices = map[curr.restaurant].prices;
+        prices = [...prices, curr.price];
+        map[curr.restaurant].reservationTimes = times;
+        map[curr.restaurant].headCounts = headcounts;
+        map[curr.restaurant].ids = ids;
+        map[curr.restaurant].prices = prices;
       }
     }
     setFilteredRestaurants(map);
@@ -47,7 +59,7 @@ export default function Reservations({route}) {
     <View style={{marginTop: 15}}>
       <Text style={styles.label}>Available Reservations</Text>
       <ScrollView style={styles.scrollView}>
-        <View style={styles.column} key={filteredRestaurants}>
+        <View style={styles.column}>
           {isLoading
             ? null
             : Object.entries(filteredRestaurants).map(([key, v]) => {
@@ -62,6 +74,9 @@ export default function Reservations({route}) {
                         restaurant: key,
                         reservationTimes:
                           filteredRestaurants[key].reservationTimes,
+                        headCounts: filteredRestaurants[key].headCounts,
+                        prices: filteredRestaurants[key].prices,
+                        ids: filteredRestaurants[key].ids,
                       })
                     }>
                     <Text>{key}</Text>

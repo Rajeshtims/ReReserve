@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Platform} from 'react-native';
+import {View, Text, StyleSheet, Platform, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native'; // Key to navigations in some components
 import {Button} from 'react-native-paper';
 import Map from './Map';
@@ -20,6 +20,9 @@ export default function Buy({route}) {
   useEffect(() => {
     console.log('Buy Screen: ');
     console.log(route.params.reservationTimes);
+    console.log(route.params.headCounts);
+    console.log(route.params.ids);
+    console.log(route.params.prices);
     setIsLoading(false);
   }, []);
   return (
@@ -33,12 +36,25 @@ export default function Buy({route}) {
           restaurants={[route.params.restaurant]}
         />
       </View>
-      <Button
-        onPress={() => {
-          navigation.navigate('PurchaseOverview');
-        }}>
-        <Text>Purchase</Text>
-      </Button>
+
+      {route.params.reservationTimes.map((el, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.button}
+          onPress={() =>
+            navigation.navigate('PurchaseOverview', {
+              restaurantName: route.params.restaurant,
+              tableSize: route.params.headCounts[index],
+              price: route.params.prices[index],
+              id: route.params.ids[index],
+              time: el,
+            })
+          }>
+          <Text>{el}</Text>
+          <Text>Table size: {route.params.headCounts[index]}</Text>
+        </TouchableOpacity>
+      ))}
+
       <View style={styles.buttonContainer}></View>
     </View>
   );
@@ -68,5 +84,20 @@ const styles = StyleSheet.create({
     height: 400,
     width: 400,
     backgroundColor: 'black',
+  },
+  button: {
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: 'black',
+    backgroundColor: 'lightgray',
+    alignSelf: 'center',
+    marginHorizontal: '2%',
+    marginTop: '2%',
+    marginBottom: 10,
+    minWidth: '90%',
+    display: 'flex',
+    alignItems: 'center',
   },
 });
