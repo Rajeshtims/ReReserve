@@ -19,6 +19,7 @@ export default function Buy({route}) {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     console.log('Buy Screen: ');
+    console.log(route.params.reservationTimes);
     setIsLoading(false);
   }, []);
   return (

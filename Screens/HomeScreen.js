@@ -93,6 +93,15 @@ export default function HomeScreen({route}) {
             Sell Reservation
           </Text>
         </Button>
+        <Button
+          style={styles.sellButton}
+          onPress={() => {
+            navigation.navigate('Setting');
+          }}>
+          <Text style={{color: 'black', fontWeight: '400', fontSize: 20}}>
+            Settings
+          </Text>
+        </Button>
       </View>
     </SafeAreaView>
   );
