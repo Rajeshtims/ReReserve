@@ -29,7 +29,7 @@ export default function Signup() {
   const [password, setPassword] = useState();
   const [venmoID, setVenmoID] = useState();
   const [venmoPassword, setVenmoPassword] = useState();
-  const [location, setLocation] = useState(null);
+
   const [storedEmail, setStoredEmail] = useState(null);
   const [storedVenmoID, setStoredVenmoID] = useState(null);
 
@@ -116,6 +116,7 @@ export default function Signup() {
   };
 
   useEffect(() => {
+    console.log('[RENDER::] Signup Screen:');
     // Get location permission, and previously stored data:
     if (isLoading) {
       if (Platform.OS == 'ios') requestIphoneLocation();
@@ -125,10 +126,9 @@ export default function Signup() {
     // Check if user already registered, if so... forward to home screen:
     if (storedEmail != null)
       navigation.navigate('Home', {
-        location: location,
         venmo_id: storedVenmoID,
       });
-  }, [location, storedEmail]); // Reload component if these vars change
+  }, [storedEmail, storedVenmoID]); // Reload component if these vars change
   return (
     <View style={styles.main}>
       <View style={styles.inputContainer}>

@@ -95,7 +95,6 @@ export default function Sell({route}) {
   };
 
   const fetchCoordinates = async () => {
-    console.log('**');
     Geocoder.from(location)
       .then(json => {
         let temp = json.results[0].geometry.location;
@@ -103,14 +102,12 @@ export default function Sell({route}) {
           latitude: temp.lat,
           longitude: temp.lng,
         };
-        console.log(curr_location);
         setCoordinates(curr_location);
       })
       .catch(error => console.warn(error));
   };
 
   const fetchAddress = async () => {
-    console.log(coordinates.coords.latitude);
     await Geocoder.from(
       coordinates.coords.latitude,
       coordinates.coords.longitude,
@@ -120,7 +117,6 @@ export default function Sell({route}) {
         let street = json.results[0].address_components[1].long_name;
         let city = json.results[0].address_components[2].long_name;
         let state = json.results[0].address_components[5].long_name;
-        console.log(streetNum + ' ' + street + ', ' + city + ', ' + state);
 
         setLocation(streetNum + ' ' + street + ', ' + city + ', ' + state);
       })
@@ -157,19 +153,20 @@ export default function Sell({route}) {
     console.log('Complete POST');
 
     Alert.alert("It's posted for sale!");
-    navigation.navigate('Home');
+    navigation.navigate('Home', {
+      venmo_id: route.params.venmo_id,
+    });
   };
 
   useEffect(() => {
-    console.log('SEll reservation:');
-    console.log(coordinates);
+    console.log('[RENDER::] Sell Reservation');
     if (isLoading) {
       // Restricted API key:
       Geocoder.init('AIzaSyBIsqjB7Rp5nTpVOi9RUZSVoCvtZYr1ZDk');
       setIsLoading(false);
     }
     if (sendFlag) handleSend();
-  }, [sendFlag, location, coordinates]);
+  }, [sendFlag]);
   return (
     <ImageBackground source={image} style={styles.main}>
       <DatePicker
