@@ -9,6 +9,7 @@ import {
   Dimensions,
   PermissionsAndroid,
   Platform,
+  Alert,
 } from 'react-native';
 // https://reactnativepaper.com/
 import {Button} from 'react-native-paper';
@@ -39,7 +40,7 @@ export default function Signup() {
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
           title: 'Geolocation Permission',
-          message: 'Can we access your location?',
+          message: 'Can we access your location for posting reservations?',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
@@ -51,11 +52,15 @@ export default function Signup() {
   };
   // Function to get user's current iPhone location:
   const requestIphoneLocation = async () => {
-    const access = await Geolocation.requestAuthorization('always').then(
-      res => {
-        console.log(res);
-      },
-    );
+    try {
+      const access = await Geolocation.requestAuthorization('always').then(
+        res => {
+          console.log('[LOCATION PERMISSION]' + res);
+        },
+      );
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   // Similiar to listeners:
@@ -71,8 +76,18 @@ export default function Signup() {
   const onChangeVenmoPassword = text => {
     setVenmoPassword(text);
   };
+
   // Save the input local DB:
   const saveLocalData = async () => {
+    // Make sure none of the fields are left blank:
+    if (email == null) return Alert.alert('You need to enter a valid email!');
+    if (password == null)
+      return Alert.alert('You need to enter a valid password!');
+    if (venmoID == null)
+      return Alert.alert('You need to enter a valid venmo ID!');
+    if (venmoPassword == null)
+      return Alert.alert('You need to enter a valid venmo password!');
+    // Save the data locally:
     try {
       AsyncStorage.setItem(`email`, email);
       AsyncStorage.setItem(`password`, password);
@@ -81,7 +96,11 @@ export default function Signup() {
     } catch (error) {
       console.log(error);
     }
-    navigation.navigate('Home');
+    // Navigate to the home screen:
+    return navigation.navigate('Home', {
+      location: location,
+      venmo_id: venmoID,
+    });
   };
   // Fetch local data from local DB:
   const getLocalData = async () => {
@@ -109,13 +128,15 @@ export default function Signup() {
         location: location,
         venmo_id: storedVenmoID,
       });
-  }, [location, storedEmail, storedVenmoID]); // Reload component if these vars change
+  }, [location, storedEmail]); // Reload component if these vars change
   return (
     <View style={styles.main}>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={email}
+          autoCorrect={false}
+          keyboardType={'email-address'}
           placeholder="Email: "
           placeholderTextColor={'#455A64'}
           onChangeText={text => onChangeEmail(text)}
@@ -123,6 +144,8 @@ export default function Signup() {
         <TextInput
           style={styles.input}
           value={password}
+          autoCorrect={false}
+          secureTextEntry={true}
           placeholder="Password: "
           placeholderTextColor={'#455A64'}
           onChangeText={text => onChangePassword(text)}
@@ -130,6 +153,8 @@ export default function Signup() {
         <TextInput
           style={styles.input}
           value={venmoID}
+          autoCorrect={false}
+          keyboardType={'email-address'}
           placeholder="Venmo ID: "
           placeholderTextColor={'#455A64'}
           onChangeText={text => onChangeVenmoID(text)}
@@ -137,6 +162,7 @@ export default function Signup() {
         <TextInput
           style={styles.input}
           value={venmoPassword}
+          secureTextEntry={true}
           placeholder="Venmo Password: "
           placeholderTextColor={'#455A64'}
           onChangeText={text => onChangeVenmoPassword(text)}
@@ -159,10 +185,9 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   inputContainer: {
-    marginTop: -155,
+    marginTop: 55,
     padding: 10,
   },
   input: {
