@@ -112,12 +112,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: 'black',
-    backgroundColor: 'lightgray',
+    backgroundColor: '#FDD5C6',
     alignSelf: 'center',
     marginHorizontal: '2%',
     marginTop: '2%',
     marginBottom: 10,
-    minWidth: '90%',
+    minWidth: '95%',
     // Wont work because <Text> is child element
     //textAlign: 'center',
     // Instead:

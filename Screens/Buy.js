@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#FCEEC3',
   },
   buttonContainer: {
     marginTop: '10%',
@@ -81,7 +82,9 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   mapView: {
-    marginTop: -90,
+    width: Platform.OS == 'ios' ? 300 : 200,
+    height: Platform.OS == 'ios' ? 50 : null,
+    marginTop: -120,
     marginBottom: 10,
     height: 400,
     width: 400,
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: 'black',
-    backgroundColor: 'lightgray',
+    backgroundColor: '#FDD5C6',
     alignSelf: 'center',
     marginHorizontal: '2%',
     marginTop: '2%',
