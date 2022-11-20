@@ -31,7 +31,7 @@ const App: () => Node = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Sell"
+          name="Sell Reservation's"
           component={Sell}
           //options={{headerShown: false}}
         />

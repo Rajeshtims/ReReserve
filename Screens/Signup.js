@@ -30,6 +30,7 @@ export default function Signup() {
   const [venmoPassword, setVenmoPassword] = useState();
   const [location, setLocation] = useState(null);
   const [storedEmail, setStoredEmail] = useState(null);
+  const [storedVenmoID, setStoredVenmoID] = useState(null);
 
   // Function to get user's current Android location:
   const requestAndroidLocation = async () => {
@@ -86,7 +87,9 @@ export default function Signup() {
   const getLocalData = async () => {
     try {
       const email = await AsyncStorage.getItem(`email`);
+      const temp_venmo_id = await AsyncStorage.getItem(`venmo_id`);
       setStoredEmail(email);
+      setStoredVenmoID(temp_venmo_id);
     } catch (error) {
       console.log(error);
     }
@@ -104,8 +107,9 @@ export default function Signup() {
     if (storedEmail != null)
       navigation.navigate('Home', {
         location: location,
+        venmo_id: storedVenmoID,
       });
-  }, [location, storedEmail]); // Reload component if these vars change
+  }, [location, storedEmail, storedVenmoID]); // Reload component if these vars change
   return (
     <View style={styles.main}>
       <View style={styles.inputContainer}>
