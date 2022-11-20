@@ -62,12 +62,12 @@ export default function HomeScreen({route}) {
 
   // When screen loads:
   useEffect(() => {
-    console.log('[RENDER] Home Screen:');
+    console.log('[RENDER::] Home Screen:');
     if (isLoading) {
       fetchData();
       setIsLoading(false);
     }
-  }, [location]);
+  }, []);
   return (
     <ImageBackground
       source={image}
@@ -92,6 +92,7 @@ export default function HomeScreen({route}) {
             navigation.navigate('Reservations', {
               allRestaurants: data,
               markers: restrauntCoords,
+              venmo_id: route.params.venmo_id,
             })
           }>
           <Text style={{color: 'black', fontWeight: '500', fontSize: 22}}>

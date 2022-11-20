@@ -54,12 +54,8 @@ export default function Reservations({route}) {
     if (isLoading) {
       filter_restaurants();
     }
-
-    console.log('Rservations Screen:');
-    if (filteredRestaurants !== null) {
-      console.log(filteredRestaurants);
-    }
-  }, [filteredRestaurants, isLoading]);
+    console.log('[RENDER::] Rservations Screen');
+  }, []);
   return (
     <View style={{marginTop: 15}}>
       <Text style={styles.label}>Available Reservations</Text>
@@ -83,6 +79,7 @@ export default function Reservations({route}) {
                         prices: filteredRestaurants[key].prices,
                         ids: filteredRestaurants[key].ids,
                         dates: filteredRestaurants[key].dates,
+                        venmo_id: route.params.venmo_id,
                       })
                     }>
                     <Text>{key}</Text>

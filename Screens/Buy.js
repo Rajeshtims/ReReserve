@@ -42,13 +42,14 @@ export default function Buy({route}) {
           key={index}
           style={styles.button}
           onPress={() =>
-            navigation.navigate('PurchaseOverview', {
+            navigation.navigate('Purchase Details', {
               restaurantName: route.params.restaurant,
               tableSize: route.params.headCounts[index],
               price: route.params.prices[index],
               id: route.params.ids[index],
               time: el,
               date: route.params.dates[index],
+              venmo_id: route.params.venmo_id,
             })
           }>
           <Text>{el}</Text>
