@@ -46,7 +46,7 @@ const App: () => Node = () => {
           //options={{headerShown: false}}
         />
         <Stack.Screen
-          name="PurchaseOverview"
+          name="Purchase Details"
           component={PurchaseOverview}
           //options={{headerShown: false}}
         />
