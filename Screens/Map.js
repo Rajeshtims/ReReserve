@@ -6,11 +6,7 @@ import {View, Text, StyleSheet, Platform} from 'react-native';
 export default function Map(props) {
   useEffect(() => {
     // When the map initially loads, fetch data:
-    console.log('Map:');
-    console.log('Restaurants to mark:');
-    console.log(props.restaurants);
-    console.log('Marker locations:');
-    console.log(props.markers);
+    console.log('[RENDER] Map');
   }, []);
   return (
     <View style={styles.container}>

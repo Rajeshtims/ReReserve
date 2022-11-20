@@ -31,8 +31,9 @@ export default function HomeScreen({route}) {
     console.log('Fetching...');
     try {
       // Get the users current location:
-      Geolocation.getCurrentPosition(
+      await Geolocation.getCurrentPosition(
         position => {
+          console.log('[USER LOCATION]');
           console.log('\tLongitude: ' + position.coords.longitude);
           console.log('\tLatitude: ' + position.coords.latitude);
           setLocation(position);
@@ -47,14 +48,13 @@ export default function HomeScreen({route}) {
       const res = await response.json();
       // Store the array of restaurant objects to state variable:
       setData(res);
-      console.log('Reservations in database:');
-      console.log(res);
       // Store all of the coordinates from the restaurants in an array for map markers:
       let temp = [];
       for (let i = 0; i < res.length; i++) {
         temp.push(JSON.parse(res[i].coordinates));
       }
       setRestaurantCoords(temp);
+      console.log('[RESERVATION DATA DELIVERED FROM SERVER]');
     } catch (error) {
       console.error(error);
     }
@@ -62,12 +62,11 @@ export default function HomeScreen({route}) {
 
   // When screen loads:
   useEffect(() => {
-    console.log('VENMO ID: ' + route.params.venmo_id);
+    console.log('[RENDER] Home Screen:');
     if (isLoading) {
       fetchData();
       setIsLoading(false);
     }
-    console.log('Home Screen:');
   }, [location]);
   return (
     <ImageBackground
