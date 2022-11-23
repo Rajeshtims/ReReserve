@@ -25,7 +25,7 @@ export default function Setting() {
     setCurrentPassword(text);
   };
 
-  const checkAndSaveCredentials = () => {
+  const checkAndSaveCredentials = async () => {
     retrieveData = async key => {
       try {
         const value = await AsyncStorage.getItem(key);
@@ -38,10 +38,10 @@ export default function Setting() {
       }
     };
 
-    const savedEmail = retrieveData('email');
-    const savedPassword = retrieveData('password');
-    const savedVenmo = retrieveData('venmo_id');
-    const savedVenmoPassword = retrieveData('venmo_password');
+    const savedEmail = await retrieveData('email');
+    const savedPassword = await retrieveData('password');
+    const savedVenmo = await retrieveData('venmo_id');
+    const savedVenmoPassword = await retrieveData('venmo_password');
 
     // TODO reading the text input is giving errors
     // key-value pair is returned
@@ -68,7 +68,9 @@ export default function Setting() {
       }
     }
   };
-
+  useEffect(() => {
+    checkAndSaveCredentials();
+  });
   return (
     <SafeAreaView>
       <ScrollView>
