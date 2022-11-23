@@ -10,31 +10,56 @@ import {
   ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Button } from 'react-native-paper';
 
 export default function Setting() {
   // this is to toggle show/hide password
-  const [secure, setSecure] = useState(true);
-  const [email, setEmail] = useState();
-  const [current_password, setCurrentPassword] = useState();
-  const [new_password, setNewPassword] = useState();
-  const [venmo_id, setVenmoId] = useState();
-  const [venmo_password, setVenmoPassword] = useState();
+  // const [secure, setSecure] = useState(true);
+  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [venmoId, setVenmoId] = useState('');
+  const [venmoPassword, setVenmoPassword] = useState('');
 
-  const handlePasswordChange = text => {
-    console.log(text);
-    setCurrentPassword(text);
-  };
+  // const handleCurrentPasswordChange = text => {
+  //   console.log(text);
+  //   setCurrentPassword(text);
+  // };
+
+  // const handleNewPasswordChange = text => {
+  //   console.log(text);
+  //   setNewPassword(text);
+  // };
+
+  // const handleEmailChange = text => {
+  //   console.log(text);
+  //   setEmail(text);
+  // };
+
+  // const handleVenmoIdChange = text => {
+  //   console.log(text);
+  //   setVenmoId(text);
+  // };
+
+  // const handleVenmoPasswordChange = text => {
+  //   console.log(text);
+  //   setVenmoPassword(text);
+  // };
+
 
   const checkAndSaveCredentials = () => {
     retrieveData = async key => {
       try {
-        const value = await AsyncStorage.getItem(key);
+        value = await AsyncStorage.getItem(key);
         if (value != null) {
+          // TODO 
+          // this prints the correct value in console but returns Object
           console.log(value);
-          //return value;
+          return value+"";
         }
       } catch (error) {
         console.log('Failed to retrieve' + key);
+        return null;
       }
     };
 
@@ -43,28 +68,35 @@ export default function Setting() {
     const savedVenmo = retrieveData('venmo_id');
     const savedVenmoPassword = retrieveData('venmo_password');
 
-    // TODO reading the text input is giving errors
-    // key-value pair is returned
-    console.log(savedPassword);
-    console.log(current_password);
-
     if (
       email &&
-      current_password &&
-      new_password &&
-      venmo_id &&
-      venmo_password
-    ) {
-      console.log('None of the entered values are null');
+      currentPassword &&
+      newPassword &&
+      venmoId &&
+      venmoPassword
+      ) {
+        console.log('None of the entered values are null');
+        console.log("User entered the following: ", 
+            "\n\t"+email, "\n\t"+currentPassword,
+            "\n\t"+newPassword, "\n\t"+venmoId, 
+            "\n\t"+venmoPassword
+            )
 
-      if (savedPassword === current_password) {
+        console.log("savedPassword === currentPassword" + savedPassword === currentPassword);
+
+        console.log("Saved data are: ",
+            "\n\t"+savedEmail, "\n\t"+savedPassword, 
+            "\n\t"+savedVenmo, "\n\t"+savedVenmoPassword
+            )
+
+      if (savedPassword === currentPassword) {
         console.log(
           'Entered password is correct. Now we can modify stored credentials',
         );
         AsyncStorage.setItem('email', email);
-        AsyncStorage.setItem('password', new_password);
-        AsyncStorage.setItem('venmo_id', venmo_id);
-        AsyncStorage.setItem('venmo_password', venmo_password);
+        AsyncStorage.setItem('password', newPassword);
+        AsyncStorage.setItem('venmo_id', venmoId);
+        AsyncStorage.setItem('venmo_password', venmoPassword);
       }
     }
   };
@@ -73,6 +105,8 @@ export default function Setting() {
     <SafeAreaView>
       <ScrollView>
         <KeyboardAvoidingView style={{flex: 1}}>
+        
+
           <View style={styles.sectionContainer}>
             <Text style={styles.highlight}> Change Setting </Text>
             <TextInput
@@ -80,75 +114,77 @@ export default function Setting() {
               placeholder="Email"
               autoComplete="email"
               keyboardType="email-address"
-              onChangeText={text => setEmail(text)}
-              // returnKeyType="next"
-              // onSubmitEditing={() => {
-              //   this.currentPassword.focus();
-              // }}
-              // this is to prevent keyboard flickering when pressing return
-              // blurOnSubmit={false}
+              onChangeText={setEmail}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                this.currentPassword.focus();
+              }}
+              this is to prevent keyboard flickering when pressing return
+              blurOnSubmit={false}
             />
             <TextInput
               style={styles.inputArea}
               placeholder="Current Password"
-              secureTextEntry={true}
+              // secureTextEntry={true}
               autoCorrect={false}
-              onChangeText={text => handlePasswordChange(text)}
-              // ref={input => {
-              //   this.currentPassword = input;
-              // }}
-              // returnKeyType="next"
-              // onSubmitEditing={() => {
-              //   this.newPassword.focus();
-              // }}
-              // blurOnSubmit={false}
+              onChangeText={setCurrentPassword}
+              ref={input => {
+                this.currentPassword = input;
+              }}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                this.newPassword.focus();
+              }}
+              blurOnSubmit={false}
             />
 
             <TextInput
               style={styles.inputArea}
               placeholder="New Password"
-              secureTextEntry={secure}
+              // secureTextEntry={secure}
               autoCorrect={false}
-              onChangeText={text => setNewPassword(text)}
-              // returnKeyType="next"
-              // ref={input => {
-              //   this.newPassword = input;
-              // }}
-              // onSubmitEditing={() => {
-              //   this.venmoId.focus();
-              // }}
-              // blurOnSubmit={false}
+              onChangeText={setNewPassword}
+              returnKeyType="next"
+              ref={input => {
+                this.newPassword = input;
+              }}
+              onSubmitEditing={() => {
+                this.venmoId.focus();
+              }}
+              blurOnSubmit={false}
             />
             <TextInput
               style={styles.inputArea}
               placeholder="Venmo ID"
-              onChangeText={text => setVenmoId(text)}
-              // returnKeyType="next"
-              // ref={input => {
-              //   this.venmoId = input;
-              // }}
-              // onSubmitEditing={() => {
-              //   this.venmoPassword.focus();
-              // }}
-              // blurOnSubmit={false}
+              onChangeText={setVenmoId}
+              returnKeyType="next"
+              ref={input => {
+                this.venmoId = input;
+              }}
+              onSubmitEditing={() => {
+                this.venmoPassword.focus();
+              }}
+              blurOnSubmit={false}
             />
             <TextInput
               style={styles.inputArea}
               placeholder="Venmo Password"
-              onChangeText={text => setVenmoPassword(text)}
-              // ref={input => {
-              //   this.venmoPassword = input;
-              // }}
-              // returnKeyType="next"
+              onChangeText={setVenmoPassword}
+              ref={input => {
+                this.venmoPassword = input;
+              }}
+              returnKeyType="next"
             />
             <TouchableOpacity
               style={styles.button}
-              onPress={() => {
-                checkAndSaveCredentials();
-              }}>
+              onPress={
+                checkAndSaveCredentials
+              }>
               <Text style={styles.text}>Save</Text>
             </TouchableOpacity>
           </View>
+
+
         </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
