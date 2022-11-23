@@ -118,9 +118,6 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     marginBottom: 10,
     minWidth: '95%',
-    // Wont work because <Text> is child element
-    //textAlign: 'center',
-    // Instead:
     display: 'flex',
     alignItems: 'center',
   },
