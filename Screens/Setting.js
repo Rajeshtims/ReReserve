@@ -10,7 +10,6 @@ import {
   ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Button } from 'react-native-paper';
 
 export default function Setting() {
   // this is to toggle show/hide password
@@ -21,52 +20,20 @@ export default function Setting() {
   const [venmoId, setVenmoId] = useState('');
   const [venmoPassword, setVenmoPassword] = useState('');
 
-  // const handleCurrentPasswordChange = text => {
-  //   console.log(text);
-  //   setCurrentPassword(text);
-  // };
-
-  // const handleNewPasswordChange = text => {
-  //   console.log(text);
-  //   setNewPassword(text);
-  // };
-
-  // const handleEmailChange = text => {
-  //   console.log(text);
-  //   setEmail(text);
-  // };
-
-  // const handleVenmoIdChange = text => {
-  //   console.log(text);
-  //   setVenmoId(text);
-  // };
-
-  // const handleVenmoPasswordChange = text => {
-  //   console.log(text);
-  //   setVenmoPassword(text);
-  // };
-
+  const [savedPassword, setSavedPassword] = useState();
 
   const checkAndSaveCredentials = async () => {
-    retrieveData = async key => {
+    const retrieveData = async (item, saveFunction) => {
       try {
-        value = await AsyncStorage.getItem(key);
-        if (value != null) {
-          // TODO 
-          // this prints the correct value in console but returns Object
-          console.log(value);
-          return value+"";
-        }
+        const value = await AsyncStorage.getItem(item);
+        // DO NOT REMOVE THIS LOG 
+        // probably because of lazy retrieval, the data is not retrieved without log
+        console.log(value);
+        saveFunction(value);
       } catch (error) {
-        console.log('Failed to retrieve' + key);
-        return null;
+        console.log(error);
       }
     };
-
-    const savedEmail = await retrieveData('email');
-    const savedPassword = await retrieveData('password');
-    const savedVenmo = await retrieveData('venmo_id');
-    const savedVenmoPassword = await retrieveData('venmo_password');
 
     if (
       email &&
@@ -76,23 +43,17 @@ export default function Setting() {
       venmoPassword
       ) {
         console.log('None of the entered values are null');
-        console.log("User entered the following: ", 
-            "\n\t"+email, "\n\t"+currentPassword,
-            "\n\t"+newPassword, "\n\t"+venmoId, 
-            "\n\t"+venmoPassword
-            )
+        // console.log("User entered the following: ", 
+        //     "\n\t"+email, "\n\t"+currentPassword,
+        //     "\n\t"+newPassword, "\n\t"+venmoId, 
+        //     "\n\t"+venmoPassword
+        //     )
 
-        console.log("savedPassword === currentPassword" + savedPassword === currentPassword);
-
-        console.log("Saved data are: ",
-            "\n\t"+savedEmail, "\n\t"+savedPassword, 
-            "\n\t"+savedVenmo, "\n\t"+savedVenmoPassword
-            )
-
+        retrieveData('password', setSavedPassword);
+        // console.log("savedPassword === currentPassword : ", savedPassword === currentPassword);
+        // console.log("Saved password is: ", "\t", savedPassword);
       if (savedPassword === currentPassword) {
-        console.log(
-          'Entered password is correct. Now we can modify stored credentials',
-        );
+        console.log('Entered password is correct. Now we can modify stored credentials',);
         AsyncStorage.setItem('email', email);
         AsyncStorage.setItem('password', newPassword);
         AsyncStorage.setItem('venmo_id', venmoId);
@@ -100,9 +61,9 @@ export default function Setting() {
       }
     }
   };
-  useEffect(() => {
-    checkAndSaveCredentials();
-  });
+  // useEffect(() => {
+  //   checkAndSaveCredentials();
+  // });
   return (
     <SafeAreaView>
       <ScrollView>
@@ -127,7 +88,7 @@ export default function Setting() {
             <TextInput
               style={styles.inputArea}
               placeholder="Current Password"
-              // secureTextEntry={true}
+              secureTextEntry={true}
               autoCorrect={false}
               onChangeText={setCurrentPassword}
               ref={input => {
@@ -143,7 +104,7 @@ export default function Setting() {
             <TextInput
               style={styles.inputArea}
               placeholder="New Password"
-              // secureTextEntry={secure}
+              secureTextEntry={secure}
               autoCorrect={false}
               onChangeText={setNewPassword}
               returnKeyType="next"
