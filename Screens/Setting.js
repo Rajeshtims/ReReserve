@@ -8,70 +8,115 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   ScrollView,
-  Alert,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Button} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
 
 export default function Setting() {
-  const navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState(true);
-  const [email, setEmail] = useState();
-  const [currentPassword, setCurrentPassword] = useState();
-  const [newPassword, setNewPassword] = useState();
-  const [oldPassword, setOldPassword] = useState();
-  const [venmoId, setVenmoId] = useState();
-  const [venmoPassword, setVenmoPassword] = useState();
-  const ref_1 = useRef();
-  const ref_2 = useRef();
-  const ref_3 = useRef();
-  const ref_4 = useRef();
+  // this is to toggle show/hide password
+  // const [secure, setSecure] = useState(true);
+  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [venmoId, setVenmoId] = useState('');
+  const [venmoPassword, setVenmoPassword] = useState('');
 
-  const retrieveOldPassword = async () => {
-    try {
-      value = await AsyncStorage.getItem('password');
-      console.log(value);
-      setOldPassword(value);
-    } catch (error) {
-      console.log(e);
-    }
-  };
+  // const handleCurrentPasswordChange = text => {
+  //   console.log(text);
+  //   setCurrentPassword(text);
+  // };
+
+  // const handleNewPasswordChange = text => {
+  //   console.log(text);
+  //   setNewPassword(text);
+  // };
+
+  // const handleEmailChange = text => {
+  //   console.log(text);
+  //   setEmail(text);
+  // };
+
+  // const handleVenmoIdChange = text => {
+  //   console.log(text);
+  //   setVenmoId(text);
+  // };
+
+  // const handleVenmoPasswordChange = text => {
+  //   console.log(text);
+  //   setVenmoPassword(text);
+  // };
 
   const checkAndSaveCredentials = async () => {
-    if (
-      email &&
-      newPassword &&
-      venmoId &&
-      venmoPassword &&
-      oldPassword == currentPassword
-    ) {
-      await AsyncStorage.setItem('email', email);
-      await AsyncStorage.setItem('password', newPassword);
-      await AsyncStorage.setItem('venmo_id', venmoId);
-      await AsyncStorage.setItem('venmo_password', venmoPassword);
-      Alert.alert('Success!', 'Your settings were saved', [
-        {
-          text: 'Home',
-          onPress: () =>
-            navigation.navigate('Home', {
-              venmo_id: venmoId,
-            }),
-        },
-      ]);
-    } else {
-      Alert.alert(
-        'Error!',
-        'It looks like you either left a field blank, or you gave the incorrect current password',
+    retrieveData = async key => {
+      try {
+        value = await AsyncStorage.getItem(key);
+        if (value != null) {
+          // TODO
+          // this prints the correct value in console but returns Object
+          console.log(value);
+          return value + '';
+        }
+      } catch (error) {
+        console.log('Failed to retrieve' + key);
+        return null;
+      }
+    };
+
+    const savedEmail = await retrieveData('email');
+    const savedPassword = await retrieveData('password');
+    const savedVenmo = await retrieveData('venmo_id');
+    const savedVenmoPassword = await retrieveData('venmo_password');
+
+    if (email && newPassword && venmoId && venmoPassword) {
+      console.log('None of the entered values are null');
+      console.log(
+        'User entered the following: ',
+        '\n\t' + email,
+        '\n\t' + currentPassword,
+        '\n\t' + newPassword,
+        '\n\t' + venmoId,
+        '\n\t' + venmoPassword,
       );
+
+      console.log(
+        'savedPassword === currentPassword' + savedPassword === currentPassword,
+      );
+
+      console.log(
+        'Saved data are: ',
+        '\n\t' + savedEmail,
+        '\n\t' + savedPassword,
+        '\n\t' + savedVenmo,
+        '\n\t' + savedVenmoPassword,
+      );
+
+      if (savedPassword === currentPassword) {
+        console.log(
+          'Entered password is correct. Now we can modify stored credentials',
+        );
+        AsyncStorage.setItem('email', email);
+        AsyncStorage.setItem('password', newPassword);
+        AsyncStorage.setItem('venmo_id', venmoId);
+        AsyncStorage.setItem('venmo_password', venmoPassword);
+      }
+    } else {
+      if (!email) {
+        Alert.alert('Email is invalid');
+      } else if (!currentPassword) {
+        Alert.alert('Current password is invalid');
+      } else if (!newPassword) {
+        Alert.alert('New password is invalid');
+      } else if (!venmoId) {
+        Alert.alert('VenmoID is invalid');
+      } else if (!venmoPassword) {
+        Alert.alert('VenmoPassword is invalid');
+      }
     }
   };
   useEffect(() => {
-    if (isLoading) {
-      retrieveOldPassword();
-      setIsLoading(false);
-    }
-  }, []);
+    checkAndSaveCredentials();
+  });
   return (
     <SafeAreaView>
       <ScrollView>
@@ -107,7 +152,7 @@ export default function Setting() {
             <TextInput
               style={styles.inputArea}
               placeholder="New Password"
-              autoCapitalize="none"
+              // secureTextEntry={secure}
               autoCorrect={false}
               onChangeText={e => setNewPassword(e)}
               returnKeyType="next"
