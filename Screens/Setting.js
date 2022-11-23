@@ -47,7 +47,7 @@ export default function Setting() {
   // };
 
 
-  const checkAndSaveCredentials = () => {
+  const checkAndSaveCredentials = async () => {
     retrieveData = async key => {
       try {
         value = await AsyncStorage.getItem(key);
@@ -63,10 +63,10 @@ export default function Setting() {
       }
     };
 
-    const savedEmail = retrieveData('email');
-    const savedPassword = retrieveData('password');
-    const savedVenmo = retrieveData('venmo_id');
-    const savedVenmoPassword = retrieveData('venmo_password');
+    const savedEmail = await retrieveData('email');
+    const savedPassword = await retrieveData('password');
+    const savedVenmo = await retrieveData('venmo_id');
+    const savedVenmoPassword = await retrieveData('venmo_password');
 
     if (
       email &&
@@ -100,7 +100,9 @@ export default function Setting() {
       }
     }
   };
-
+  useEffect(() => {
+    checkAndSaveCredentials();
+  });
   return (
     <SafeAreaView>
       <ScrollView>
