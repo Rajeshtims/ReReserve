@@ -8,10 +8,13 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Setting() {
+  const navigation = useNavigation();
   // this is to toggle show/hide password
   // const [secure, setSecure] = useState(true);
   const [email, setEmail] = useState('');
@@ -21,6 +24,7 @@ export default function Setting() {
   const [venmoPassword, setVenmoPassword] = useState('');
 
   const [savedPassword, setSavedPassword] = useState();
+  const [status, setStatus] = useState(false);
 
   const checkAndSaveCredentials = async () => {
     const retrieveData = async (item, saveFunction) => {
@@ -28,7 +32,7 @@ export default function Setting() {
         const value = await AsyncStorage.getItem(item);
         // DO NOT REMOVE THIS LOG 
         // probably because of lazy retrieval, the data is not retrieved without log
-        console.log(value);
+        console.log(item," : ", value);
         saveFunction(value);
       } catch (error) {
         console.log(error);
@@ -49,7 +53,7 @@ export default function Setting() {
         //     "\n\t"+venmoPassword
         //     )
 
-        retrieveData('password', setSavedPassword);
+      retrieveData('password', setSavedPassword);
         // console.log("savedPassword === currentPassword : ", savedPassword === currentPassword);
         // console.log("Saved password is: ", "\t", savedPassword);
       if (savedPassword === currentPassword) {
@@ -57,8 +61,22 @@ export default function Setting() {
         AsyncStorage.setItem('email', email);
         AsyncStorage.setItem('password', newPassword);
         AsyncStorage.setItem('venmo_id', venmoId);
-        AsyncStorage.setItem('venmo_password', venmoPassword);
+        AsyncStorage.setItem('venmo_password', venmoPassword, () => {
+            setStatus(false);
+            Alert.alert("Password change successful. You will be redirected to Home.");
+            navigation.navigate('Home');
+        });
       }
+      else{
+          Alert.alert("Current password didn't match. Please try again");
+      }
+    }
+    else{
+        if (!email){ Alert.alert("Email is invalid");}
+        else if (!currentPassword){ Alert.alert("Current password is invalid");}
+        else if (!newPassword){ Alert.alert("New password is invalid");}
+        else if (!venmoId){ Alert.alert("VenmoID is invalid");}
+        else if (!venmoPassword){ Alert.alert("VenmoPassword is invalid");}
     }
   };
   // useEffect(() => {
@@ -88,7 +106,7 @@ export default function Setting() {
             <TextInput
               style={styles.inputArea}
               placeholder="Current Password"
-              secureTextEntry={true}
+              // secureTextEntry={true}
               autoCorrect={false}
               onChangeText={setCurrentPassword}
               ref={input => {
@@ -104,7 +122,7 @@ export default function Setting() {
             <TextInput
               style={styles.inputArea}
               placeholder="New Password"
-              secureTextEntry={secure}
+              // secureTextEntry={true}
               autoCorrect={false}
               onChangeText={setNewPassword}
               returnKeyType="next"
