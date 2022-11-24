@@ -23,6 +23,7 @@ export default function Purchase({route}) {
 
   const handleSend = async () => {
     const venmo_password = await AsyncStorage.getItem(`venmo_password`);
+    const email = await AsyncStorage.getItem(`email`);
     const res = await fetch('https://team13.egrep6021ad.repl.co/purchase/', {
       method: 'POST',
       headers: {
@@ -33,6 +34,7 @@ export default function Purchase({route}) {
         id: id,
         venmo_id: route.params.venmo_id,
         password: venmo_password,
+        email: email,
       }),
     });
     Alert.alert('Sold!', 'Confirmation #: \nReservation name: ', [
