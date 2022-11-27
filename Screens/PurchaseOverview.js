@@ -10,7 +10,9 @@ import {
 import {Button, Surface} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import Buy from './Buy';
-import {restaurant, date} from './Reservations';
+//import {restaurant, date} from './Reservations';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 //https://unsplash.com/photos/mAHzkCjWc20
 const image = {
   uri: 'https://images.unsplash.com/photo-1635548166842-bf67bacbefaa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
@@ -20,6 +22,8 @@ export default function Purchase({route}) {
   const [id, setId] = useState(route.params.id);
 
   const handleSend = async () => {
+    const venmo_password = await AsyncStorage.getItem(`venmo_password`);
+    const email = await AsyncStorage.getItem(`email`);
     const res = await fetch('https://team13.egrep6021ad.repl.co/purchase/', {
       method: 'POST',
       headers: {
@@ -28,6 +32,9 @@ export default function Purchase({route}) {
       },
       body: JSON.stringify({
         id: id,
+        venmo_id: route.params.venmo_id,
+        password: venmo_password,
+        email: email,
       }),
     });
     Alert.alert('Sold!', 'Confirmation #: \nReservation name: ', [
