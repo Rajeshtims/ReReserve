@@ -7,6 +7,7 @@ import {
   Alert,
   ImageBackground,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import moment from 'moment';
 import {useNavigation} from '@react-navigation/native';
@@ -40,6 +41,7 @@ export default function Sell({route}) {
   const [venmoID, setVenmoID] = useState();
   // Visual features
   const [isLoading, setIsLoading] = useState(true);
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showLocationButton, setShowLocationButton] = useState(true);
   const [useCurrentLocation, setUseCurrentLocation] = useState(false);
@@ -150,12 +152,15 @@ export default function Sell({route}) {
       }),
     });
 
-    console.log('Complete POST');
+    console.log('[POST SUCCESS::]');
 
-    Alert.alert("It's posted for sale!");
-    navigation.navigate('Home', {
-      venmo_id: route.params.venmo_id,
-    });
+    setShowActivityIndicator(true);
+    setTimeout(() => {
+      Alert.alert("It's posted for sale!");
+      navigation.navigate('Home', {
+        venmo_id: route.params.venmo_id,
+      });
+    }, 2000);
   };
 
   useEffect(() => {
@@ -166,102 +171,112 @@ export default function Sell({route}) {
       setIsLoading(false);
     }
     if (sendFlag) handleSend();
+    return () => {
+      console.log('[UNMOUNTING::] Sell Reservation');
+    };
   }, [sendFlag]);
   return (
     <ImageBackground source={image} style={styles.main}>
-      <DatePicker
-        modal
-        // Determines if datepicker is showing:
-        open={showModal}
-        // Make android look like iphones default:
-        androidVariant={'iosClone'}
-        minuteInterval={5}
-        date={startDate}
-        onDateChange={curr => setDate(curr)}
-        onConfirm={date => onConfirmation(date)}
-        onCancel={() => {
-          setShowModal(false);
-        }}
-      />
-      {nextClicked == false ? (
-        <TextInput
-          style={styles.inputMain}
-          value={restaurant}
-          placeholder="What's the name of the restuarant? "
-          placeholderTextColor={'#455A64'}
-          fontSize={17}
-          textAlign={'center'}
-          onChangeText={text => onChangeRestaurant(text)}
-        />
+      {showActivityIndicator ? (
+        <ActivityIndicator />
       ) : (
         <>
-          {nextClicked2 == false ? (
+          <DatePicker
+            modal
+            // Determines if datepicker is showing:
+            open={showModal}
+            // Make android look like iphones default:
+            androidVariant={'iosClone'}
+            minuteInterval={5}
+            date={startDate}
+            onDateChange={curr => setDate(curr)}
+            onConfirm={date => onConfirmation(date)}
+            onCancel={() => {
+              setShowModal(false);
+            }}
+          />
+          {nextClicked == false ? (
             <TextInput
               style={styles.inputMain}
-              value={location}
-              placeholder="What is the address? "
+              value={restaurant}
+              placeholder="What's the name of the restuarant? "
               placeholderTextColor={'#455A64'}
-              fontSize={15}
+              fontSize={17}
               textAlign={'center'}
-              onChangeText={text => onChangeLocation(text)}
+              onChangeText={text => onChangeRestaurant(text)}
             />
           ) : (
             <>
-              {nextClicked4 == false ? (
+              {nextClicked2 == false ? (
                 <TextInput
-                  keyboardType="numeric"
                   style={styles.inputMain}
-                  value={headCount}
-                  placeholder="How many people? "
-                  placeholderTextColor={'#455A64'}
-                  fontSize={20}
-                  textAlign={'center'}
-                  onChangeText={text => onChangeHeadCount(text)}
-                />
-              ) : (
-                <TextInput
-                  keyboardType="numeric"
-                  style={styles.inputMain}
-                  value={price}
-                  placeholder="How much would you like to be paid? "
+                  value={location}
+                  multiline={false}
+                  placeholder="What is the address? "
                   placeholderTextColor={'#455A64'}
                   fontSize={15}
                   textAlign={'center'}
-                  onChangeText={text => onChangePrice(text)}
+                  onChangeText={text => onChangeLocation(text)}
                 />
+              ) : (
+                <>
+                  {nextClicked4 == false ? (
+                    <TextInput
+                      keyboardType="numeric"
+                      style={styles.inputMain}
+                      value={headCount}
+                      placeholder="How many people? "
+                      placeholderTextColor={'#455A64'}
+                      fontSize={20}
+                      textAlign={'center'}
+                      onChangeText={text => onChangeHeadCount(text)}
+                    />
+                  ) : (
+                    <TextInput
+                      keyboardType="numeric"
+                      style={styles.inputMain}
+                      value={price}
+                      placeholder="How much would you like to be paid? "
+                      placeholderTextColor={'#455A64'}
+                      fontSize={15}
+                      textAlign={'center'}
+                      onChangeText={text => onChangePrice(text)}
+                    />
+                  )}
+                </>
               )}
             </>
           )}
-        </>
-      )}
-      {nextClicked == true && showLocationButton ? (
-        <>
+          {nextClicked == true && showLocationButton ? (
+            <>
+              <Button
+                onPress={() => {
+                  if (useCurrentLocation == false) {
+                    fetchAddress();
+                    setUseCurrentLocation(true);
+                    setNextClicked2(false);
+                  }
+                }}>
+                <Text style={{color: 'white'}}>Use current Location</Text>
+              </Button>
+            </>
+          ) : null}
+
           <Button
+            style={styles.sellButton}
             onPress={() => {
-              if (useCurrentLocation == false) {
-                fetchAddress();
-                setUseCurrentLocation(true);
-                setNextClicked2(false);
-              }
+              nextClicked
+                ? nextClicked2
+                  ? handleThirdClick()
+                  : handleSecondClick()
+                : handleFirstClick();
             }}>
-            <Text style={{color: 'white'}}>Use current Location</Text>
+            <Text style={{color: 'black', fontWeight: '400', fontSize: 20}}>
+              {'Next'}
+            </Text>
           </Button>
         </>
-      ) : null}
-
-      <Button
-        style={styles.sellButton}
-        onPress={() => {
-          nextClicked
-            ? nextClicked2
-              ? handleThirdClick()
-              : handleSecondClick()
-            : handleFirstClick();
-        }}>
-        <Text style={{color: 'black', fontWeight: '400', fontSize: 20}}>
-          {'Next'}
-        </Text>
-      </Button>
+      )}
     </ImageBackground>
   );
 }
@@ -277,7 +292,7 @@ const styles = StyleSheet.create({
   },
 
   inputMain: {
-    height: 60,
+    height: 50,
     width: '80%',
     marginTop: '-30%',
     borderWidth: 2,

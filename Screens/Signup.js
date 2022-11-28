@@ -98,7 +98,6 @@ export default function Signup() {
     }
     // Navigate to the home screen:
     return navigation.navigate('Home', {
-      location: location,
       venmo_id: venmoID,
     });
   };
@@ -197,6 +196,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 5,
     borderRadius: 5,
+    color: 'black',
   },
   registerButton: {
     width: 150,

@@ -71,6 +71,9 @@ export default function Setting() {
       retrieveOldPassword();
       setIsLoading(false);
     }
+    return () => {
+      console.log('[UNMOUNTING::] Settings Screen');
+    };
   }, []);
   return (
     <SafeAreaView>

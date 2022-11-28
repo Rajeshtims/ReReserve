@@ -37,7 +37,9 @@ export default function Purchase({route}) {
         email: email,
       }),
     });
-    Alert.alert('Sold!', 'Confirmation #: \nReservation name: ', [
+    const response = await res.json();
+
+    Alert.alert('Sold!', `Confirmation #: ${response} \nReservation name: `, [
       {
         text: 'Home',
         onPress: () =>
@@ -113,21 +115,23 @@ const styles = StyleSheet.create({
   },
   fontSize: {
     fontSize: 24,
-
+    color: 'black',
     margin: 7,
     //textAlign: 'center',
   },
   subText: {
     fontSize: 21,
-    fontWeight: '300',
+    fontWeight: '400',
     paddingLeft: 7,
     paddingBottom: 10,
     fontStyle: 'italic',
+    color: 'black',
   },
   title: {
     fontSize: 30,
     textAlign: 'center',
     textDecorationLine: 'underline',
     margin: 5,
+    color: 'black',
   },
 });

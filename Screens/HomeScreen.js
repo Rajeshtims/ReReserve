@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   ImageBackground,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native'; // Key to navigations in some components
+import {useNavigation, useIsFocused} from '@react-navigation/native'; // Key to navigations in some components
 import {Button} from 'react-native-paper';
 import Map from './Map';
 // https://github.com/Agontuk/react-native-geolocation-service
@@ -25,6 +25,10 @@ export default function HomeScreen({route}) {
   const [data, setData] = useState();
   const [restrauntCoords, setRestaurantCoords] = useState([]);
   const [location, setLocation] = useState(null);
+  const isFocused = useIsFocused();
+  const setIsLoadingPropFunction = async arg => {
+    setIsLoading(arg);
+  };
 
   // Function to query remote server / DB:
   const fetchData = async () => {
@@ -67,7 +71,11 @@ export default function HomeScreen({route}) {
       fetchData();
       setIsLoading(false);
     }
-  }, []);
+    return () => {
+      console.log('[SCREEN NOT IN FOCUS::]');
+      !isFocused ? fetchData() : null;
+    };
+  }, [isFocused]);
   return (
     <ImageBackground
       source={image}
