@@ -25,6 +25,8 @@ export default function Signup() {
   const navigation = useNavigation();
   // Init. state variables:
   const [isLoading, setIsLoading] = useState(true);
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [venmoID, setVenmoID] = useState();
@@ -64,6 +66,12 @@ export default function Signup() {
   };
 
   // Similiar to listeners:
+  const onChangeFirstName = text => {
+    setFirstName(text);
+  };
+  const onChangeLastName = text => {
+    setLastName(text);
+  };
   const onChangeEmail = text => {
     setEmail(text);
   };
@@ -80,6 +88,10 @@ export default function Signup() {
   // Save the input local DB:
   const saveLocalData = async () => {
     // Make sure none of the fields are left blank:
+    if (firstName == null)
+      return Alert.alert('You need to enter your first name!');
+    if (lastName == null)
+      return Alert.alert('You need to enter your last name!');
     if (email == null) return Alert.alert('You need to enter a valid email!');
     if (password == null)
       return Alert.alert('You need to enter a valid password!');
@@ -93,6 +105,8 @@ export default function Signup() {
       AsyncStorage.setItem(`password`, password);
       AsyncStorage.setItem(`venmo_id`, venmoID);
       AsyncStorage.setItem(`venmo_password`, venmoPassword);
+      AsyncStorage.setItem(`first_name`, firstName);
+      AsyncStorage.setItem(`last_name`, lastName);
     } catch (error) {
       console.log(error);
     }
@@ -131,6 +145,22 @@ export default function Signup() {
   return (
     <View style={styles.main}>
       <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={firstName}
+          autoCorrect={false}
+          placeholder="First Name: "
+          placeholderTextColor={'#455A64'}
+          onChangeText={text => onChangeFirstName(text)}
+        />
+        <TextInput
+          style={styles.input}
+          value={lastName}
+          autoCorrect={false}
+          placeholder="Last Name: "
+          placeholderTextColor={'#455A64'}
+          onChangeText={text => onChangeLastName(text)}
+        />
         <TextInput
           style={styles.input}
           value={email}
