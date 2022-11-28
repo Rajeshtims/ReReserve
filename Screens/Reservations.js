@@ -1,10 +1,20 @@
 import React from 'react';
-import {View, Text, StyleSheet, Platform, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import {useState, useEffect} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native'; // Key to navigations in some components
 import {NavigationContainer} from '@react-navigation/native';
-
+//https://unsplash.com/photos/KNTrdpk-gTg
+const image = {
+  uri: 'https://images.unsplash.com/photo-1666595621164-3bc9f9ab7f3a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+};
 export default function Reservations({route}) {
   const navigation = useNavigation();
   const [filteredRestaurants, setFilteredRestaurants] = useState(null);
@@ -55,10 +65,12 @@ export default function Reservations({route}) {
       filter_restaurants();
     }
     console.log('[RENDER::] Rservations Screen');
+    return () => {
+      console.log('[UNMOUNTING::] Reservations Screen');
+    };
   }, []);
   return (
-    <View style={{marginTop: 15}}>
-      <Text style={styles.label}>Available Reservations</Text>
+    <ImageBackground imageStyle={{opacity: 0.8}} source={image}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.column}>
           {isLoading
@@ -82,25 +94,29 @@ export default function Reservations({route}) {
                         venmo_id: route.params.venmo_id,
                       })
                     }>
-                    <Text>{key}</Text>
-                    <Text>{filteredRestaurants[key].address}</Text>
+                    <Text style={{color: 'black', fontSize: 20, padding: 5}}>
+                      {key}
+                    </Text>
+                    <Text style={{color: 'black', fontStyle: 'italic'}}>
+                      {filteredRestaurants[key].address}
+                    </Text>
                   </TouchableOpacity>
                 );
               })}
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: 8,
+    height: '100%',
     backgroundColor: 'aliceblue',
   },
   scrollView: {
     height: '100%',
+    marginTop: 20,
   },
   column: {
     flexDirection: 'column',
@@ -112,7 +128,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: 'black',
-    backgroundColor: '#FDD5C6',
+    backgroundColor: 'white',
     alignSelf: 'center',
     marginHorizontal: '2%',
     marginTop: '2%',

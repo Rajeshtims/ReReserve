@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Platform, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native'; // Key to navigations in some components
 import {Button} from 'react-native-paper';
 import Map from './Map';
@@ -36,28 +44,29 @@ export default function Buy({route}) {
           restaurants={[route.params.restaurant]}
         />
       </View>
-
-      {route.params.reservationTimes.map((el, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.button}
-          onPress={() =>
-            navigation.navigate('Purchase Details', {
-              restaurantName: route.params.restaurant,
-              tableSize: route.params.headCounts[index],
-              price: route.params.prices[index],
-              id: route.params.ids[index],
-              time: el,
-              date: route.params.dates[index],
-              venmo_id: route.params.venmo_id,
-            })
-          }>
-          <Text>{el}</Text>
-          <Text>Table size: {route.params.headCounts[index]}</Text>
-        </TouchableOpacity>
-      ))}
-
-      <View style={styles.buttonContainer}></View>
+      <ScrollView style={styles.buttonContainer}>
+        {route.params.reservationTimes.map((el, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.button}
+            onPress={() =>
+              navigation.navigate('Purchase Details', {
+                restaurantName: route.params.restaurant,
+                tableSize: route.params.headCounts[index],
+                price: route.params.prices[index],
+                id: route.params.ids[index],
+                time: el,
+                date: route.params.dates[index],
+                venmo_id: route.params.venmo_id,
+              })
+            }>
+            <Text style={{color: 'black'}}>{el}</Text>
+            <Text style={{color: 'black'}}>
+              Table size: {route.params.headCounts[index]}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -68,11 +77,7 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: '#FCEEC3',
-  },
-  buttonContainer: {
-    marginTop: '10%',
   },
   sellButton: {
     alignSelf: 'center',
@@ -82,13 +87,15 @@ const styles = StyleSheet.create({
     marginTop: '5%',
   },
   mapView: {
+    position: 'relative',
     width: Platform.OS == 'ios' ? 300 : 200,
     height: Platform.OS == 'ios' ? 50 : null,
-    marginTop: -120,
-    marginBottom: 10,
     height: 400,
     width: 400,
     backgroundColor: 'black',
+  },
+  buttonContainer: {
+    marginTop: '5%',
   },
   button: {
     paddingHorizontal: 8,
