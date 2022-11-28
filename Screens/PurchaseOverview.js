@@ -38,16 +38,20 @@ export default function Purchase({route}) {
       }),
     });
     const response = await res.json();
-
-    Alert.alert('Sold!', `Confirmation #: ${response} \nReservation name: `, [
-      {
-        text: 'Home',
-        onPress: () =>
-          navigation.navigate('Home', {
-            venmo_id: route.params.venmo_id,
-          }),
-      },
-    ]);
+    console.log(response);
+    Alert.alert(
+      'Sold!',
+      `Confirmation #: ${response.confirmation_number} \nReservation name: ${response.reservation_name} `,
+      [
+        {
+          text: 'Home',
+          onPress: () =>
+            navigation.navigate('Home', {
+              venmo_id: route.params.venmo_id,
+            }),
+        },
+      ],
+    );
   };
 
   useEffect(() => {

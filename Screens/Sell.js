@@ -17,6 +17,7 @@ import Geocoder from 'react-native-geocoding';
 import {Modal, Portal, Button, Provider} from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
 // https://unsplash.com/photos/fwWNzqif624
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const image = {
   uri: 'https://images.unsplash.com/photo-1648146299076-ec0c5e5ead00?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
 };
@@ -38,6 +39,7 @@ export default function Sell({route}) {
   const [startDate, setStartDate] = useState(new Date());
   const [reservationDate, setReservationDate] = useState();
   // Retrieved from local storage:
+  const [name, setName] = useState();
   const [venmoID, setVenmoID] = useState();
   // Visual features
   const [isLoading, setIsLoading] = useState(true);
@@ -140,6 +142,7 @@ export default function Sell({route}) {
         adress: location,
         price: price,
         venmo_id: route.params.venmo_id,
+        name: name,
         coordinates: {
           latitude: useCurrentLocation
             ? coordinates.coords.latitude
@@ -162,12 +165,16 @@ export default function Sell({route}) {
       });
     }, 2000);
   };
-
+  const getLocalName = async () => {
+    const local_name = await AsyncStorage.getItem(`last_name`);
+    setName(local_name);
+  };
   useEffect(() => {
     console.log('[RENDER::] Sell Reservation');
     if (isLoading) {
       // Restricted API key:
       Geocoder.init('AIzaSyBIsqjB7Rp5nTpVOi9RUZSVoCvtZYr1ZDk');
+      getLocalName();
       setIsLoading(false);
     }
     if (sendFlag) handleSend();
